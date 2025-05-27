@@ -1,0 +1,4 @@
+[mysqld]
+server-id=1  # Altere para 2 e 3 nos slaves
+log-bin=mysql-bin
+binlog-do-db=appdb

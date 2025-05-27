@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:10.5
+    container_name: rathena_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ragnarok
+      MYSQL_DATABASE: ragnarok
+      MYSQL_USER: ragnarok
+      MYSQL_PASSWORD: ragnarok
+    volumes:
+      - rathena_db_data:/var/lib/mysql
+    networks:
+      - rathena_net
+
+  rathena:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rathena_server
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=ragnarok
+      - DB_PASS=ragnarok
+      - DB_NAME=ragnarok
+    ports:
+      - "6900:6900"
+      - "6121:6121"
+      - "5121:5121"
+    networks:
+      - rathena_net
+#    volumes:
+#      - ./rathena/conf:/rathena/conf
+#      - ./rathena/custom:/rathena/custom
+
+volumes:
+  rathena_db_data:
+
+networks:
+  rathena_net:

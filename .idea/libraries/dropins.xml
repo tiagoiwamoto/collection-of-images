@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="dropins">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/kong-apigateway/docker-apim-4.5.x/docker-apim-4.5.x/docker-compose/apim-is-as-km-with-analytics/dockerfiles/is-as-km/dropins/wso2is.key.manager.core-1.7.11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/kong-apigateway/docker-apim-4.5.x/docker-apim-4.5.x/docker-compose/apim-is-as-km-with-analytics/dockerfiles/is-as-km/dropins/wso2is.notification.event.handlers-1.7.11.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

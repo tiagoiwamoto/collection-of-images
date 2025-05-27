@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="docker-apim-4.5.x">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/kong-apigateway/docker-apim-4.5.x.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  mariadb-master:
+    image: mariadb:10.11
+    container_name: mariadb-master
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+      MARIADB_REPLICATION_MODE: master
+      MARIADB_REPLICATION_USER: replica
+      MARIADB_REPLICATION_PASSWORD: replicapass
+    volumes:
+      - ./master:/var/lib/mysql
+      - ./master:/etc/mysql/conf.d
+    ports:
+      - "3306:3306"
+
+  mariadb-slave1:
+    image: mariadb:10.11
+    container_name: mariadb-slave1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MARIADB_REPLICATION_MODE: slave
+      MARIADB_REPLICATION_USER: replica
+      MARIADB_REPLICATION_PASSWORD: replicapass
+      MARIADB_MASTER_HOST: mariadb-master
+    depends_on:
+      - mariadb-master
+    volumes:
+      - ./slave:/var/lib/mysql
+      - ./slave:/etc/mysql/conf.d
+    ports:
+      - "3307:3306"
+
+  mariadb-slave2:
+    image: mariadb:10.11
+    container_name: mariadb-slave2
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MARIADB_REPLICATION_MODE: slave
+      MARIADB_REPLICATION_USER: replica
+      MARIADB_REPLICATION_PASSWORD: replicapass
+      MARIADB_MASTER_HOST: mariadb-master
+    depends_on:
+      - mariadb-master
+    volumes:
+      - ./slave:/var/lib/mysql
+      - ./slave:/etc/mysql/conf.d
+    ports:
+      - "3308:3306"

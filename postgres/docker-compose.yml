@@ -1,0 +1,61 @@
+version: '3.8'
+services:
+  postgres-master:
+    image: postgres:14
+    container_name: postgres-master
+    environment:
+      POSTGRES_USER: kamehouse
+      POSTGRES_PASSWORD: 1ddca6e4-995d-4b5c-8b96-c96a84fa796e
+      POSTGRES_DB: kamehouse_main
+    ports:
+      - "5432:5432"
+    volumes:
+      - master_data:/var/lib/postgresql/data
+    networks:
+      - postgres-network
+
+  postgres-replica:
+    image: postgres:14
+    container_name: postgres-replica
+    environment:
+      POSTGRES_USER: kamehouse
+      POSTGRES_PASSWORD: 1ddca6e4-995d-4b5c-8b96-c96a84fa796e
+      POSTGRES_DB: kamehouse_replica
+      POSTGRES_HOST_AUTH_METHOD: trust
+    depends_on:
+      - postgres-master
+    ports:
+      - "5433:5432"
+    volumes:
+      - replica_data:/var/lib/postgresql/data
+    networks:
+      - postgres-network
+    command: |
+      bash -c "
+      until ping -c 1 postgres-master; do echo waiting for master; sleep 1; done;
+      PGPASSWORD=1ddca6e4-995d-4b5c-8b96-c96a84fa796e pg_basebackup -h postgres-master -D /var/lib/postgresql/data -U replicator -v -P --wal-method=stream;
+      postgres"
+
+
+  # Serviço de backup
+  postgres-backup:
+    image: postgres:14
+    container_name: postgres-backup
+    volumes:
+      - ./master_data:/backup  # Diretório onde os backups serão salvos na máquina física
+      - ./backup.sh:/usr/local/bin/backup.sh  # Montando o script de backup no contêiner
+    environment:
+      POSTGRES_USER: kamehouse
+      POSTGRES_PASSWORD: 1ddca6e4-995d-4b5c-8b96-c96a84fa796e
+    depends_on:
+      - postgres-master
+    entrypoint: ["/bin/sh", "-c", "chmod +x /usr/local/bin/backup.sh && /usr/local/bin/backup.sh"]
+    networks:
+      - postgres-network
+
+volumes:
+  master_data:
+  replica_data:
+
+networks:
+  postgres-network:

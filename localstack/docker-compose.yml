@@ -1,0 +1,26 @@
+version: '3'
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566"
+    environment:
+      HOSTNAME: localstack
+      HOSTNAME_EXTERNAL: localstack
+      SERVICES: s3,lambda,dynamodb,sqs,sns
+      DEBUG: 1
+      DATA_DIR: /tmp/localstack/data
+      #LOCALSTACK_HOSTNAME: "localhost:4566"
+      DEFAULT_REGION: sa-east-1
+      LOCALSTACK_AUTH_TOKEN: "ls-DIxIXuDI-NElu-bIja-Nawi-SANi3945b2ff"
+      AWS_ACCESS_KEY_ID: "test"  # Substitua pelo seu AWS Access Key ID
+      AWS_SECRET_ACCESS_KEY: "test"  # Substitua pelo seu AWS Secret Access Key
+    volumes:
+      - "./localstack:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4566/_localstack/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

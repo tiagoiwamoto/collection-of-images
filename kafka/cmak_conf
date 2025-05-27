@@ -1,0 +1,15 @@
+cmak.zkhosts="zookeeper:2181"
+cmak.basicAuthentication.enabled=false
+
+# Configuração para Kafka com SSL
+kafka-manager.ssl.keystore.location="/cmak/certs/keystore.jks"
+kafka-manager.ssl.keystore.password="f287c66d-7d42-4a6a-965a-ca753073a32b"
+kafka-manager.ssl.key.password="f287c66d-7d42-4a6a-965a-ca753073a32b"
+kafka-manager.ssl.truststore.location="/cmak/certs/truststore.jks"
+kafka-manager.ssl.truststore.password="f287c66d-7d42-4a6a-965a-ca753073a32b"
+
+# Opcional: desativar a verificação de hostname SSL
+kafka-manager.ssl.endpoint.identification.algorithm=""
+
+# Outros parâmetros de configuração do CMAK
+cmak.ssl=true

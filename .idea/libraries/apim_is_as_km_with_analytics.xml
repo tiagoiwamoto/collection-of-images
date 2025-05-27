@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="apim-is-as-km-with-analytics">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/kong-apigateway/docker-apim-4.5.x/docker-apim-4.5.x/docker-compose/apim-is-as-km-with-analytics/apim-is-as-km-with-analytics.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

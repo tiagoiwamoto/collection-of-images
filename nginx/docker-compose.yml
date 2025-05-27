@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx_server
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./data/conf.d:/etc/nginx/conf.d  # Configurações do Nginx
+      - ./data/html:/usr/share/nginx/html  # Arquivos estáticos do site
+      - ./data/ssl:/etc/letsencrypt  # Diretório para os certificados SSL gerados
+      - ./data/ssl-data:/var/lib/letsencrypt  # Armazenamento de dados do Certbot
+    depends_on:
+      - certbot
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot
+    volumes:
+      - ./data/ssl:/etc/letsencrypt  # Diretório para os certificados SSL gerados
+      - ./data/html:/usr/share/nginx/html  # Arquivos estáticos do site
+      - ./data/ssl-data:/var/lib/letsencrypt  # Armazenamento de dados do Certbot
+#    command: certonly --webroot --webroot-path=/usr/share/nginx/html --email suporte@kamehouse.com.br --agree-tos --no-eff-email -d kamehouse.com.br -d www.kamehouse.com.br
+    entrypoint: ["/bin/sh", "-c", "while true; do certbot renew; sleep 30d; done"]
