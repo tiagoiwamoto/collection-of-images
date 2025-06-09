@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    container_name: azurite
+    ports:
+      - "10000:10000" # Blob service
+      - "10001:10001" # Queue service
+      - "10002:10002" # Table service
+    volumes:
+      - azurite-data:/data
+    command: "azurite-blob azurite-queue azurite-table"
+
+  azure-functions:
+    image: mcr.microsoft.com/azure-functions/dotnet:4
+    container_name: azure-functions
+    ports:
+      - "7071:7071" # Azure Functions local runtime
+    environment:
+      - AzureWebJobsStorage=http://azurite:10000/devstoreaccount1
+    depends_on:
+      - azurite
+
+
+  azure-service-bus:
+    image: ghcr.io/azure/azure-service-bus-emulator:latest
+    container_name: azure-service-bus
+    ports:
+      - "5672:5672" # Porta padrão para Service Bus
+      - "9354:9354" # Porta de gerenciamento
+    environment:
+      - SERVICEBUS_CONNECTION_STRING=Endpoint=sb://localhost/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=yourkey
+
+
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    ports:
+      - "9042:9042" # Cassandra default port
+    environment:
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_NUM_TOKENS=256
+      - CASSANDRA_START_RPC=true
+
+volumes:
+  azurite-data:
